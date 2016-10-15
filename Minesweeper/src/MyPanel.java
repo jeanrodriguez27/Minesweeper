@@ -1,9 +1,9 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Insets;
-import java.util.Random;
-
 import javax.swing.JPanel;
+
+import java.util.*;
 
 public class MyPanel extends JPanel {
 	private static final long serialVersionUID = 3426940946811133635L;
@@ -17,6 +17,18 @@ public class MyPanel extends JPanel {
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
+	
+	Random randomCoord = new Random();
+	int[] xcoord = {};  
+	int[] ycoord = {};  
+	
+	//This adds intergers to an array.
+	static int[] addElement(int[] a, int e) {
+		a  = Arrays.copyOf(a, a.length + 1);
+		a[a.length - 1] = e;
+		return a;
+		}
+	
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
 			throw new RuntimeException("INNER_CELL_SIZE must be positive!");
@@ -27,12 +39,7 @@ public class MyPanel extends JPanel {
 		if (TOTAL_ROWS + (new Random()).nextInt(1) < 3) {	//Use of "random" to prevent unwanted Eclipse warning
 			throw new RuntimeException("TOTAL_ROWS must be at least 3!");
 		}
-//		for (int x = 0; x < TOTAL_COLUMNS; x++) {   //Top row
-//			colorArray[x][0] = Color.WHITE;
-//		}
-//		for (int y = ; y < TOTAL_ROWS; y++) {   //Left column
-//			colorArray[0][y] = Color.WHITE;
-//		}
+
 		for (int x = 0; x < TOTAL_COLUMNS; x++) {   //The rest of the grid
 			for (int y = 0; y < TOTAL_ROWS; y++) {
 				colorArray[x][y] = Color.WHITE;
@@ -63,10 +70,8 @@ public class MyPanel extends JPanel {
 		for (int x = 0; x <= TOTAL_COLUMNS; x++) {
 			g.drawLine(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)), y1 + GRID_Y, x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)), y1 + GRID_Y + ((INNER_CELL_SIZE + 1) * (TOTAL_ROWS )));
 		}
-
-		//Draw an additional cell at the bottom left
-		//g.drawRect(x1 + GRID_X, y1 + GRID_Y + ((INNER_CELL_SIZE + 1) * (TOTAL_ROWS - 1)), INNER_CELL_SIZE + 1, INNER_CELL_SIZE + 1);
-
+		
+	
 		//Paint cell colors
 		for (int x = 0; x < TOTAL_COLUMNS; x++) {
 			for (int y = 0; y < TOTAL_ROWS; y++) {
@@ -78,6 +83,7 @@ public class MyPanel extends JPanel {
 			}
 		}
 	}
+	
 	public int getGridX(int x, int y) {
 		Insets myInsets = getInsets();
 		int x1 = myInsets.left;
@@ -95,9 +101,7 @@ public class MyPanel extends JPanel {
 		}
 		x = x / (INNER_CELL_SIZE + 1);
 		y = y / (INNER_CELL_SIZE + 1);
-//		if (x == 0 && y == TOTAL_ROWS-1) {    //The lower left extra cell
-//			return x;
-//		}
+
 		if (x < 0 || x > TOTAL_COLUMNS -1 || y < 0 || y > TOTAL_ROWS - 1) {   //Outside the rest of the grid
 			return -1;
 		}
@@ -120,12 +124,34 @@ public class MyPanel extends JPanel {
 		}
 		x = x / (INNER_CELL_SIZE + 1);
 		y = y / (INNER_CELL_SIZE + 1);
-	//	if (x == 0 && y == TOTAL_ROWS - 1) {    //The lower left extra cell
-	//		return y;
-	//	}
+
 		if (x < 0 || x > TOTAL_COLUMNS - 1 || y < 0 || y > TOTAL_ROWS - 1) {   //Outside the rest of the grid
 			return -1;
 		}
 		return y;
 	}
+	
+	public int[] minePlacerX( int x, int y ){
+		MineMover theMine = new MineMover(0, 0);	
+		int a;
+				for (int i=0; i<9; i++) {
+					int mineX = randomCoord.nextInt(9);
+					theMine.moveInX(mineX);
+					a= theMine.getXPos();
+					xcoord = addElement(xcoord,a);
+					}
+		return xcoord;	
+	}
+	public int[] minePlacerY( int x, int y ){
+		MineMover theMine = new MineMover(0, 0);
+		int b;
+				for (int i=0; i<9; i++) {
+					int mineY = randomCoord.nextInt(9);
+					theMine.moveInY(mineY);
+					b= theMine.getYPos();
+					ycoord = addElement(ycoord,b);
+					}
+		return ycoord;
+	}
+		
 }
